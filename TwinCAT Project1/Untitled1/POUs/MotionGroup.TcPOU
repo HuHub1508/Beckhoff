@@ -3,8 +3,6 @@
   <POU Name="MotionGroup" Id="{adfa0d03-917b-4a88-b893-87f11eae58b2}" SpecialFunc="None">
     <Declaration><![CDATA[PROGRAM MotionGroup
 VAR
-	_stGroupRef: AXES_GROUP_REF;
-	_stAxis: ARRAY[1..iAxesCount] OF Axis_Ref;
 	_fb_AddAxisTOGroup: ARRAY[1..iAxesCount] OF MC_AddAxisToGroup;
 	i: INT;
 	
@@ -40,6 +38,9 @@ VAR
 	
 	_bWritePosition: BOOL;
 	_rt_WritePosition: R_trig;
+	
+	_fb_MovePath: MC_MovePath;
+	
 END_VAR
 VAR CONSTANT
 	iAxesCount: INT:=4;
@@ -51,26 +52,26 @@ _fb_AddAxisTOGroup[3].IdentInGroup := MCS_Z;
 _fb_AddAxisTOGroup[4].IdentInGroup := MCS_C1;
 FOR i:=1 TO iAxesCount DO
 _FB_AddAxisTOGroup[i](
-	AxesGroup:= _stGroupRef, 
-	Axis:= _stAxis[i], 
+	AxesGroup:= gbkin.groupRef, 
+	Axis:= gbkin.MCSRef[i], 
 	Execute:= , );
 END_FOR;
 
 _fb_GroupEnable(
-	AxesGroup:= _stGroupRef, 
+	AxesGroup:= gbkin.groupRef, 
 	Execute:=,  );
 	
 _fb_GroupReadError(
-	AxesGroup:= _stGroupRef, 
+	AxesGroup:= gbkin.groupRef, 
 	Enable:= TRUE, );
 
 _fb_GroupReadStatus(
-	AxesGroup:= _stGroupRef, 
+	AxesGroup:= gbkin.groupRef, 
 	Enable:= TRUE, );
 	
 
 _fb_GroupReset(
-	AxesGroup:= _stGroupRef, 
+	AxesGroup:= gbkin.groupRef, 
 	Execute:= ,  );	
 
 _PathData(FilledRows=> _PathDataFilledRows, OccupiedBuffer=> _PathDataOccupiedBuffer);	
@@ -94,7 +95,13 @@ IF _rt_WritePosition.Q THEN
 		Error=> , 
 		ErrorId=> );
 END_IF	
-	]]></ST>
+	
+_fb_MovePath(
+	AxesGroup:= gbkin.groupRef, 
+	PathData:= _PathData, 
+	Execute:= , 
+ );
+]]></ST>
     </Implementation>
     <LineIds Name="MotionGroup">
       <LineId Id="28" Count="0" />
@@ -120,6 +127,9 @@ END_IF
       <LineId Id="96" Count="13" />
       <LineId Id="27" Count="0" />
       <LineId Id="136" Count="1" />
+      <LineId Id="185" Count="3" />
+      <LineId Id="184" Count="0" />
+      <LineId Id="180" Count="0" />
     </LineIds>
   </POU>
 </TcPlcObject>

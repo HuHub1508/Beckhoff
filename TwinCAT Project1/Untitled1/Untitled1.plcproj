@@ -23,6 +23,13 @@
     <Compile Include="DUTs\DUT_Test_1.TcDUT">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="DUTs\KinematicsD4.TcDUT">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="GVLs\GVL_Kinematics.TcGVL">
+      <SubType>Code</SubType>
+      <LinkAlways>true</LinkAlways>
+    </Compile>
     <Compile Include="PlcTask.TcTTO">
       <SubType>Code</SubType>
     </Compile>

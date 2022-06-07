@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <DUT Name="KinematicsD4" Id="{9c8cfcd6-6028-4be3-b638-6ebe7459d9df}">
+    <Declaration><![CDATA[TYPE KinematicsD4 :
+STRUCT
+	GroupRef: AXES_GROUP_REF;
+	ACSRef: ARRAY[1..4] OF Axis_Ref;
+	MCSRef: ARRAY[1..4] OF Axis_Ref;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
