@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="FB01" Id="{74de3924-ae28-4c51-8ac2-79a2615fb79c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB01
+VAR_INPUT
+	input1: BOOL;
+END_VAR
+VAR_OUTPUT
+	output1: bool;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[output1:=input1;]]></ST>
+    </Implementation>
+    <LineIds Name="FB01">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

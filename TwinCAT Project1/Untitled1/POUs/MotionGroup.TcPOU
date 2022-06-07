@@ -1,0 +1,125 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.11">
+  <POU Name="MotionGroup" Id="{adfa0d03-917b-4a88-b893-87f11eae58b2}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MotionGroup
+VAR
+	_stGroupRef: AXES_GROUP_REF;
+	_stAxis: ARRAY[1..iAxesCount] OF Axis_Ref;
+	_fb_AddAxisTOGroup: ARRAY[1..iAxesCount] OF MC_AddAxisToGroup;
+	i: INT;
+	
+	_fb_GroupEnable: MC_GroupEnable;
+	_fb_GroupDisable: MC_GroupDisable;
+	_fb_GroupReadError: MC_GroupReadError;
+	_fb_GroupReadStatus: MC_GroupReadStatus;
+	_fb_GroupReset: MC_GroupReset;
+	_fb_GroupSetOverride: MC_GroupSetOverride;
+	_fb_RemoveAxisFromGroup: MC_RemoveAxisFromGroup;
+	_fb_SetCoordinateTransform: MC_SetCoordinateTransform;
+	_fb_TrackConveyorBelt: MC_TrackConveyorBelt;
+	_fb_UngroupAllAxes: MC_UngroupAllAxes;
+	_fb_MoveLinearAbsolutePreparation: MC_MoveLinearAbsolutePreparation;
+	
+	_Buffer: ARRAY[1..4096] OF BYTE ;
+	_PathData: MC_PATH_DATA_REF(ADR(_Buffer),SIZEOF(_buffer));
+	
+	_arPosition: ARRAY[1..4] OF MC_LREAL :=[100,100,0,90];
+	_PositionCount: UDINT :=4;
+	_Velocity: MC_LREAL:=10;
+	_Accel: MC_LREAL:=100;
+	_Decel: MC_LREAL:=100;
+	_Jerk: MC_LREAL:=1000;
+	_BufferMode: MC_BUFFER_MODE := mcBlendinglow;
+	_TransitionMode: MC_TRANSITION_MODE:= mcTransModeCornerDistanceAdvanced;
+	_arTransitionPara: ARRAY[1..2] OF MC_LReal :=[10,10];
+	_TransitionParaCount: UDINT:=2;
+	_InvokeId: UDINT;
+	_PathDataFilledRows: UDINT;
+	_PathDataOccupiedBuffer: UDINT;
+	
+	
+	_bWritePosition: BOOL;
+	_rt_WritePosition: R_trig;
+END_VAR
+VAR CONSTANT
+	iAxesCount: INT:=4;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[_fb_AddAxisTOGroup[1].IdentInGroup := MCS_X;
+_fb_AddAxisTOGroup[2].IdentInGroup := MCS_Y;
+_fb_AddAxisTOGroup[3].IdentInGroup := MCS_Z;
+_fb_AddAxisTOGroup[4].IdentInGroup := MCS_C1;
+FOR i:=1 TO iAxesCount DO
+_FB_AddAxisTOGroup[i](
+	AxesGroup:= _stGroupRef, 
+	Axis:= _stAxis[i], 
+	Execute:= , );
+END_FOR;
+
+_fb_GroupEnable(
+	AxesGroup:= _stGroupRef, 
+	Execute:=,  );
+	
+_fb_GroupReadError(
+	AxesGroup:= _stGroupRef, 
+	Enable:= TRUE, );
+
+_fb_GroupReadStatus(
+	AxesGroup:= _stGroupRef, 
+	Enable:= TRUE, );
+	
+
+_fb_GroupReset(
+	AxesGroup:= _stGroupRef, 
+	Execute:= ,  );	
+
+_PathData(FilledRows=> _PathDataFilledRows, OccupiedBuffer=> _PathDataOccupiedBuffer);	
+_rt_WritePosition(CLK:= _bWritePosition, Q=> );
+
+
+IF _rt_WritePosition.Q THEN
+	_fb_MoveLinearAbsolutePreparation(
+		PathData:= _PathData, 
+		Position:= ADR(_arPosition), 
+		PositionCount:= _PositionCount, 
+		Velocity:= _Velocity, 
+		Acceleration:= _Accel, 
+		Deceleration:= _Decel, 
+		Jerk:= _Jerk, 
+		BufferMode:= _BufferMode, 
+		TransitionMode:= _TransitionMode, 
+		TransitionParameter:= ADR(_arTransitionPara), 
+		TransitionParameterCount:= _TransitionParaCount, 
+		InvokeId:= _InvokeId, 
+		Error=> , 
+		ErrorId=> );
+END_IF	
+	]]></ST>
+    </Implementation>
+    <LineIds Name="MotionGroup">
+      <LineId Id="28" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="11" Count="3" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="42" Count="2" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="63" Count="2" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="70" Count="2" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="88" Count="3" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="132" Count="0" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="124" Count="0" />
+      <LineId Id="96" Count="13" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="136" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>
